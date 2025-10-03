@@ -1,0 +1,38 @@
+﻿@inject ScERPA.Services.Interfaces.ICommonServices commonServices
+@model TenantDetailsViewModel
+<div tabindex="0">
+    <h4>ID: @Model.Id</h4>
+    <hr />
+    <dl class="row rounded shadow">
+        <dt class="col-sm-2 py-3">
+            @Html.DisplayNameFor(model => model.Nome)
+        </dt>
+        <dd class="col-sm-10 py-3">
+            @Html.DisplayFor(model => model.Nome)
+        </dd>
+        <dt class="col-sm-2 py-3">
+            @Html.DisplayNameFor(model => model.Parent)
+        </dt>
+        <dd class="col-sm-10 py-3">
+            @Html.DisplayFor(model => model.Parent)
+        </dd>
+        <dt class="col-sm-2 py-3">
+            @Html.DisplayNameFor(model => model.Url)
+        </dt>
+        <dd class="col-sm-10 py-3">
+            @Html.DisplayFor(model => model.Url)
+        </dd>
+        <dt class="col-sm-2 py-3">
+            @Html.DisplayNameFor(model => model.Logo)
+        </dt>
+        <dd class="col-sm-10 py-3">
+            @Html.DisplayFor(model => model.Logo)
+        </dd>
+        <dt class="col-sm-2 py-3">
+            @Html.DisplayNameFor(model => model.Configurazione)
+        </dt>
+        <dd class="col-sm-10 py-3">
+            @Html.DisplayFor(model => model.Configurazione)
+        </dd>
+    </dl>
+</div>

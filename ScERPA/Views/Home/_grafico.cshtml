@@ -1,0 +1,99 @@
+﻿<div id="grafico" style="width:100%;height:480px" tabindex="0"></div>
+
+<script type="text/javascript">
+
+    var chartDom = document.getElementById('grafico');
+    var myChart = echarts.init(chartDom, 'light', {
+        renderer: 'svg',
+        locale: 'IT'
+    });
+
+    var option;
+
+    option = {
+        aria: {
+            show: true
+        },
+        title: {
+            text: 'I servizi più usati:'
+        },
+        legend: {},
+        grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+        },
+        xAxis: {
+            type: 'value',
+            boundaryGap: [0, 0.01]
+        },
+        yAxis: {
+
+            type: 'category',
+            data: []
+        },
+        series: [
+            {
+                name: 'anpr',
+                type: 'bar',
+                data: [],
+                label: {
+                  show: true,
+                  position: 'right',
+                  color: "black",
+                  fontSize: 12,
+                  formatter: function(d) {
+                    return  d.data.toLocaleString('it-IT');
+                  }
+                }
+            }
+        ]
+    };
+
+    myChart.setOption(option);
+
+    myChart.showLoading();
+
+    let url = new URL(window.location.origin + "/Api/Analytics/TopServices");
+
+
+    fetch(url,
+        {
+            method: "GET",
+            headers: {
+                "Content-type": "application/json; charset=UTF-8"
+
+            },
+            credentials: "same-origin"
+
+        })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Api non disponibile ');
+          }
+          return response.json();
+        })
+        .then(data => {
+                console.log(data); 
+                myChart.hideLoading();
+                myChart.setOption({
+                                yAxis: {
+                                        type: 'category',
+                                        data: data.categories
+                                },
+                                series: [
+                                    {
+                                        name: 'chiamate',
+                                        type: 'bar',
+                                        data: data.values
+                                    }
+                                ]
+                });                
+        })
+        .catch(error => {
+            console.error('Errore:', error);
+        });
+    
+
+</script>

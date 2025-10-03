@@ -1,0 +1,22 @@
+﻿@inject ScERPA.Services.Interfaces.ICommonServices commonServices
+@model UserAdminViewModel
+
+
+<div class="alert alert-danger mt-4" role="alert">
+    <p>Sei sicuro di volere cancellare questo elemento?</p>
+    <form asp-action="Delete" asp-route-UserId="@Model.UserId" asp-route-Purpouse="@Model.Abilitazioni.First().Id">
+        <button type="submit" class="btn btn-danger">
+            <span>Conferma eliminazione</span>
+        </button>
+    </form>
+</div>
+<div class="clearfix">
+    <h1 class="float-start">@ViewData["Title"]</h1>
+    <a class="btn float-end" role="button" asp-action="Index">Torna alla lista</a>
+</div>
+<br />
+<br />
+<br />
+<partial name="_Details" model="Model" />
+
+<br />

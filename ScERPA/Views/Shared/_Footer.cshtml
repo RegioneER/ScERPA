@@ -1,0 +1,64 @@
+﻿@using ScERPA.Models;
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Hosting
+@using ScERPA.Services.Interfaces;
+@using System.Security.Claims;
+
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+@inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment env
+@inject ScERPA.Services.Interfaces.ICommonServices commonServices
+@inject ScERPA.Services.Interfaces.IConsumerServices consumerServices
+@inject IConfiguration Configuration
+@inject SignInManager<ApplicationUser> SignInManager
+@inject IHttpContextAccessor _httpContextAccessor;
+
+<a href="#main" aria-hidden="true" tabindex="-1" data-bs-toggle="backtotop" class="back-to-top neutral-1-bg-a8" id="backtotopbutton">
+    <svg class="icon icon-light" aria-hidden="true">
+        <use xlink:href='@(commonServices.SpritesPath + "/sprites.svg#it-arrow-up")' href='@(commonServices.SpritesPath + "/sprites.svg#it-arrow-up")'></use>
+    </svg>
+</a>
+<footer id="footer" class="it-footer mt-auto">
+    <div class="it-footer-main">
+        <div class="container">
+            <section>
+                <div class="row clearfix">
+                    <div class="col-sm-12">
+                        <div class="it-brand-wrapper">
+                            @if (!string.IsNullOrEmpty(commonServices.TenantCorrente(commonServices.IdTenantCorrente)?.Logo))
+                            {
+                                <a href="@commonServices.TenantCorrente(commonServices.IdTenantCorrente)?.Url" Title="vai al sito del tenant @commonServices.TenantCorrente(commonServices.IdTenantCorrente)?.Nome">
+                                    <img class="icon" src="@commonServices.TenantCorrente(commonServices.IdTenantCorrente)?.Logo" alt="" aria-hidden="true">
+                                    <div class="it-brand-text">
+                                            <span class="no_toc" >@commonServices.TenantCorrente(commonServices.IdTenantCorrente)?.Nome</span>                                   
+                                    </div>
+                                </a>
+                            }
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+            <section>
+                <div class="row">
+                    <div class="col-lg-3 col-md-3 col-sm-6 pb-2">
+                        <div class="link-list-wrapper">
+                            <ul class="footer-list link-list clearfix">
+                                <li><a class="list-item" href="@(commonServices.AccessibilitytUrl)" title="Vai alla pagina: Dichiarazione di accessibilità">Dichiarazione di accessibilità</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <div class="it-footer-small-prints clearfix">
+        <div class="container">
+            <ul class="it-footer-small-prints-list list-inline mb-0 d-flex flex-column flex-md-row">
+                
+            </ul>
+        </div>
+    </div>
+
+</footer>

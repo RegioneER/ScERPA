@@ -1,0 +1,18 @@
+﻿@inject ScERPA.Services.Interfaces.ICommonServices commonServices
+@model UserAdminUserProfileViewModel
+
+<partial name="_Esito" />
+
+<div class="clearfix">
+   <h1 class ="float-start">@ViewData["Title"]</h1>
+   <a class="btn float-end" role="button" asp-action="IndexProfiles">Torna alla lista</a>
+</div>
+
+<br />
+<partial name="_ProfileDetails" model="Model" />
+<br />
+<div>
+    <a asp-action="EditProfile" asp-route-UserId="@Model.UserId" class="btn btn-primary" role="button">
+        <span>Modifica profilazione</span>
+    </a>
+</div>

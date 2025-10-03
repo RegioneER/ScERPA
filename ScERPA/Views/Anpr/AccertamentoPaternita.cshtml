@@ -1,0 +1,128 @@
+﻿@inject ScERPA.Services.Interfaces.ICommonServices commonServices
+@using ScERPA.ViewModels
+@model AccertamentoGenitoreViewModel
+<partial name="_Esito" />
+<br>
+<h1>@ViewData["Title"]</h1>
+<br />
+<hr />
+<br>
+
+    @if (Model.risultati is not null && ViewData.ModelState.IsValid)
+    {
+        <h2 id="lblRisultatiRicerca">Risultati della ricerca</h2>
+        <br>
+        <div class="px-3 mt-2">
+            @if (!string.IsNullOrEmpty(Model.AccertamentoMultiplo.Pdf))
+            {
+                <a class="btn btn-outline-primary" role="button" download='@($"{Model.AccertamentoMultiplo.Servizio}_{@DateTime.Now.ToString("dd_MM_yyyy")}")' href="data:application/pdf;base64,@Model.AccertamentoMultiplo.Pdf">
+                    <span>Esporta in pdf</span>
+                    <svg class="icon icon-primary ms-1" aria-hidden="true">
+                        <use xlink:href='@(commonServices.SpritesPath+"/sprites.svg#it-download")' href='@(commonServices.SpritesPath+"/sprites.svg#it-download")'></use>
+                    </svg>
+                </a>
+            }
+            @if (!string.IsNullOrEmpty(Model.AccertamentoMultiplo.Xlsx))
+            {
+                <a class="btn btn-outline-primary" role="button" download='@($"{Model.AccertamentoMultiplo.Servizio}_{@DateTime.Now.ToString("dd_MM_yyyy")}")' href="data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,@Model.AccertamentoMultiplo.Xlsx">
+                    <span>Esporta in Excel</span>
+                    <svg class="icon icon-primary ms-1" aria-hidden="true">
+                        <use xlink:href='@(commonServices.SpritesPath+"/sprites.svg#it-download")' href='@(commonServices.SpritesPath+"/sprites.svg#it-download")'></use>
+                    </svg>
+                </a>
+            }
+        </div>
+        <br>
+        <section name="risultatiricerca" aria-labelledby="lblRisultatiRicerca" tabindex="0">
+            <br>
+            @if(Model.risultati.Count > 0)
+            {
+                <div class="table-responsive">
+            @foreach (RisultatoAccertamentoGenitoreViewModel soggetto in Model.risultati)
+            {
+                    <article role="contentinfo" tabindex="0">
+                        <header >
+                        <table class="table table-striped table-hover rounded shadow" aria-label="Generalità di @soggetto.Generalita.CodiceFiscale">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Codice Fiscale</th>
+                                    <th scope="col">Cognome</th>
+                                    <th scope="col">Nome</th>
+                                    <th scope="col">Data di nascita</th>
+                                    <th scope="col">Sesso</th>
+                                    <th scope="col">Nazione</th>
+                                    <th scope="col">Provincia</th>
+                                    <th scope="col">Località</th>
+                                    <th scope="col">Codice Istat Località</th>
+                                    <th scope="col">Nota</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>@soggetto.Generalita.CodiceFiscale</td>
+                                    <td>@soggetto.Generalita.Cognome</td>
+                                    <td>@soggetto.Generalita.Nome</td>
+                                    <td>@soggetto.Generalita.DataNascita</td>
+                                    <td>@soggetto.Generalita.Sesso</td>
+                                    <td>@soggetto.Generalita.Nazione</td>
+                                    <td>@soggetto.Generalita.Provincia</td>
+                                    <td>@soggetto.Generalita.Localita</td>
+                                    <td>@soggetto.Generalita.CodIstatComune</td>
+                                    <td>@soggetto.Errore</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </header>
+                        <table class="table table-striped table-hover rounded shadow" aria-label="generalità del padre di @soggetto.Generalita.CodiceFiscale">
+                        <thead>
+                            <tr>
+                                <th>Codice Fiscale Padre</th>
+                                <th>Cognome</th>
+                                <th>Nome</th>
+                                <th>Data di nascita</th>
+                                <th>Sesso</th>
+                                <th>Nazione</th>
+                                <th>Provincia</th>
+                                <th>Località</th>
+                                <th>Codice Istat Località</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            @if (soggetto.Genitore is not null)
+                            {
+                                var componente = soggetto.Genitore;
+                                <tr>
+                                    <td>@componente.Generalita.CodiceFiscale</td>
+                                    <td>@componente.Generalita.Cognome</td>
+                                    <td>@componente.Generalita.Nome</td>
+                                    <td>@componente.Generalita.DataNascita</td>
+                                    <td>@componente.Generalita.Sesso</td>
+                                    <td>@componente.Generalita.Nazione</td>
+                                    <td>@componente.Generalita.Provincia</td>
+                                    <td>@componente.Generalita.Localita</td>
+                                    <td>@componente.Generalita.CodIstatComune</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </article>
+            }
+            </div>
+            }
+            else
+            {
+                <div class="alert alert-info" role="alert">
+                    <p>Nessun risultato</p>
+                </div>
+            }
+        </section>
+    <br>
+    <hr />
+    <br>
+    }
+    <partial name="_AccertamentoMultiplo" model="@Model.AccertamentoMultiplo">
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+    <script src="/js/Spinner.js" ></script>
+}

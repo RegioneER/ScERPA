@@ -1,0 +1,26 @@
+﻿@inject ScERPA.Services.Interfaces.ICommonServices commonServices
+@model AreaDetailsViewModel
+<div tabindex="0">
+    <h4>ID: @Model.Id</h4>
+    <hr />
+    <dl class="row rounded shadow">
+        <dt class="col-sm-2 py-3">
+            @Html.DisplayNameFor(model => model.Nome)
+        </dt>
+        <dd class="col-sm-10 py-3">
+            @Html.DisplayFor(model => model.Nome)
+        </dd>
+        <dt class="col-sm-2 py-3">
+            @Html.DisplayNameFor(model => model.Ordinale)
+        </dt>
+        <dd class="col-sm-10 py-3">
+            @Html.DisplayFor(model => model.Ordinale)
+        </dd>
+        <dt class="col-sm-2 py-3">
+            @Html.DisplayNameFor(model => model.Sezioni)
+        </dt>
+        <dd class="col-sm-10 py-3">
+            @Html.DisplayFor(model => model.Sezioni)
+        </dd>
+    </dl>
+</div>

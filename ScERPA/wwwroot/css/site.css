@@ -1,0 +1,37 @@
+
+/*
+.it-header-slim-wrapper {
+    background-color: #0f2a48!important;
+}
+
+.it-footer-main {
+    background-color: #0f2a48!important;
+}
+*/
+
+dt {
+    font-weight: 700;
+    border-style: solid;
+    border-width: thin;
+    background-color: lightgrey;
+}
+
+dd {
+    margin-bottom: 0;
+    margin-left: 0;
+    border-style: solid;
+    border-width: thin;
+}
+
+.it-user-wrapper .link-list-wrapper>ul>li>a.slim {
+    line-height: 1.0em !Important;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: #F5F5F5!important;
+}
+
+.validation-summary-errors ul {
+    display: none !important
+}
+

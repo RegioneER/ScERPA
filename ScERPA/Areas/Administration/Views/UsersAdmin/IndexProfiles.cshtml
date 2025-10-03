@@ -1,0 +1,83 @@
+﻿@inject ScERPA.Services.Interfaces.ICommonServices commonServices
+@model UsersListViewModel
+<partial name="_Esito" />
+<br />
+<div>
+    <h1>@ViewData["Title"]</h1>
+</div>
+
+<div class="SearchPanel" id="UsersSearchPanel">
+    <div class="accordion" id="accordionExample1">
+        <div class="accordion-item">
+            <h2 class="accordion-header " id="SearchPanelLabel">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSearchPanel" aria-expanded="true" aria-controls="collapseSearchPanel">
+                    Mostra/Nascondi i criteri di ricerca
+                </button>
+            </h2>
+            <div id="collapseSearchPanel" class="accordion-collapse collapse show" data-bs-parent="#accordionExample1" role="region" aria-labelledby="SearchPanelLabel">
+                <div class="accordion-body neutral-2-bg">
+                    <form method="post">
+                        <div class="row">
+                            <div class="form-group mt-4 col-6 col-lg-4">
+                                <label class="active" asp-for="searchPanel.Cognome">Cognome</label>
+                                <input type="text" asp-for="searchPanel.Cognome" class="form-control" autocomplete="family-name" aria-required="true" />
+                                <span asp-validation-for="searchPanel.Cognome" class="text-danger"></span>
+                            </div>
+                            <div class="form-group mt-4 col-6 col-lg-4">
+                                <label class="active" asp-for="searchPanel.Nome">Nome</label>
+                                <input type="text" asp-for="searchPanel.Nome" class="form-control" autocomplete="given-name" aria-required="true" />
+                                <span asp-validation-for="searchPanel.Nome" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group mt-3">
+                            <button type="submit" class="btn btn-secondary">
+                                <span>Cerca</span>
+                            </button>
+                        </div>
+                    </form>                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<br>
+<h3>Elenco utenti</h3>
+<br>
+@if(Model.Elenco.Count>0)
+{
+    <div class="table-responsive rounded shadow">
+        <table id="TabellaUtentiDaAmministrare" name="TabellaUtentiDaAmministrare" class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th scope="col">Cognome e nome</th>
+                    <th scope="col">Email</th>
+                    <th ></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var elemento in Model.Elenco)
+                {
+                    <tr>
+                        <td>
+                            <a asp-area="Administration" asp-controller="UsersAdmin" asp-action="ProfileDetails" asp-route-UserId="@elemento.Id" aria-label="Dettaglio autorizzazioni servizi/finalità di @(elemento.CognomeNome)"><span>@elemento.CognomeNome</span></a>
+                        </td>
+                        <td>
+                            @elemento.Email
+                        </td>
+                        <td>
+                            <a asp-area="Administration" asp-controller="UsersAdmin" asp-action="EditProfile" asp-route-UserId="@elemento.Id" class="btn btn-outline-primary btn-me" role="button" aria-label="Modifica profilo di @(elemento.CognomeNome)">
+                                <span>Modifica</span>
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+else
+{
+    <div class="alert alert-info" role="alert">
+        <p>Nessun utente trovato</p>
+    </div>
+}

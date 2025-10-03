@@ -1,0 +1,50 @@
+﻿@inject ScERPA.Services.Interfaces.ICommonServices commonServices
+@model EServiceDetailsViewModel
+<div tabindex="0">
+    <h4>ID: @Model.Id</h4>
+    <hr />
+    <dl class="row rounded shadow">
+        <dt class="col-sm-2 py-3">
+            @Html.DisplayNameFor(model => model.Nome)
+        </dt>
+        <dd class="col-sm-10 py-3">
+            @Html.DisplayFor(model => model.Nome)
+        </dd>
+        <dt class="col-sm-2 py-3">
+            @Html.DisplayNameFor(model => model.Area )
+        </dt>
+        <dd class="col-sm-10 py-3">
+            @Html.DisplayFor(model => model.Area)
+        </dd>
+        <dt class="col-sm-2 py-3">
+            @Html.DisplayNameFor(model => model.Sezione )
+        </dt>
+        <dd class="col-sm-10 py-3">
+            @Html.DisplayFor(model => model.Sezione)
+        </dd>
+        <dt class="col-sm-2 py-3">
+            @Html.DisplayNameFor(model => model.Descrizione)
+        </dt>
+        <dd class="col-sm-10 py-3">
+            @Html.DisplayFor(model => model.Descrizione)
+        </dd>
+        <dt class="col-sm-2 py-3">
+            @Html.DisplayNameFor(model => model.Cod)
+        </dt>
+        <dd class="col-sm-10 py-3">
+            @Html.DisplayFor(model => model.Cod)
+        </dd>
+        <dt class="col-sm-2 py-3">
+            @Html.DisplayNameFor(model => model.Attivo )
+        </dt>
+        <dd class="col-sm-10 py-3">
+            @Html.DisplayFor(model => model.Attivo)
+        </dd>
+        <dt class="col-sm-2 py-3">
+            @Html.DisplayNameFor(model => model.Indirizzo)
+        </dt>
+        <dd class="col-sm-10 py-3">
+            @Html.DisplayFor(model => model.Indirizzo)
+        </dd>
+    </dl>
+</div>

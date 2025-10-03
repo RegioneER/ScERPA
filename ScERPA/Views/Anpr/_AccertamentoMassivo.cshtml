@@ -1,0 +1,46 @@
+﻿@inject ScERPA.Services.Interfaces.ICommonServices commonServices
+@using ScERPA.ViewModels
+@model AccertamentoMassivoViewModel
+
+
+<section name="parametriricerca" class="lightgrey-bg-a3 rounded shadow py-3" aria-label="Parametri di ricerca" tabindex="0">
+    <em class="px-3">I campi con * sono obbligatori</em>
+    <form id="FormVerifica" name="FormVerifica" method="post" asp-controller="ANPR" asp-action="@Model.Servizio" asp-route-input="@Model.inputModel" class="px-3" enctype="multipart/form-data">
+        <div class="form-group col-12 mt-5">
+            <div asp-validation-summary="All" class="text-danger" role="alert"></div>
+            <div class="select-wrapper">
+                <label asp-for='inputModel.FinalitaId' class="active">Finalità*</label>
+                <select asp-for='inputModel.FinalitaId' asp-items="@Model.ListaFinalita" class="form-control" aria-required="true" autocomplete="off">
+                    <option value="" selected="">...</option>
+                </select>
+                <span asp-validation-for="inputModel.FinalitaId" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="mt-5">
+
+            <input type="file" asp-for="inputModel.FileRichiesta" class="form-control"  />
+            <label asp-for='inputModel.FileRichiesta' class="active">Seleziona file*</label>
+            <span asp-validation-for="inputModel.FileRichiesta" class="text-danger"></span>
+        </div>
+        <div class="mt-5">
+            <div class="form-check">
+                @Html.EditorFor(m => m.inputModel.Dichiarazione, new { htmlAttributes = new { @aria_described_by = "inputModel_Dichiarazione-help" } })
+                <label asp-for="inputModel.Dichiarazione" class="active">Dichiaro di utilizzare il servizio esclusicamente per la finalità indicata.*</label>
+                <br>
+                <small id="inputModel_Dichiarazione-help" class="form-text">Si rammenta che che l’erogatore dei servizi conserva traccia di ogni chiamata ed è in grado di determinare quali servizi sono stati utilizzati da un determinato utente, quale finalità è stata indicata oltre a data e ora della postazione da cui è avvenuta la chiamata.</small>
+                <br>
+                <span asp-validation-for="inputModel.Dichiarazione" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <button id="submitBtn" name="submitBtn" type="submit" class="btn btn-primary">Crea richiesta massiva</button>
+            </div>
+        </div>
+        <div id="spinner" class="progress progress-indeterminate d-none" tabindex="-1">
+            <span class="visually-hidden" aria-label="In elaborazione...">In elaborazione...</span>
+            <div class="progress-bar" role="progressbar"></div>
+            <br />
+        </div>
+    </form>
+</section>

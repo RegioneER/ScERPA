@@ -1,0 +1,23 @@
+﻿@inject ScERPA.Services.Interfaces.ICommonServices commonServices
+@model FinalityDetailsViewModel
+<partial name="_Esito" />
+
+<div class="clearfix">
+   <h1 class ="float-start">@ViewData["Title"]</h1>
+   <a class="btn float-end" role="button" asp-action="Index">Torna alla prima pagina della lista</a>
+</div>
+
+<br />
+<partial name="_Details" model="Model" />
+<br />
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary" role="button">
+        <span>Modifica</span>
+
+    </a>
+    <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger" role="button">
+        <span>Elimina</span>
+
+    </a>
+
+</div>

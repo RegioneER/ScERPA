@@ -1,0 +1,22 @@
+﻿@inject ScERPA.Services.Interfaces.ICommonServices commonServices
+@model ConfigurationDetailsViewModel
+
+
+<div class="alert alert-danger" role="alert">
+    <p>Sei sicuro di volere cancellare questo elemento?</p>
+    <form asp-action="Delete" asp-route-id="@Model.Id">
+        <button type="submit" class="btn btn-danger">
+            <span>Conferma eliminazione</span>
+        </button>
+    </form>
+</div>
+<br />
+<div class="clearfix">
+   <h1 class ="float-start">@ViewData["Title"]</h1>
+    <a class="btn float-end" role="button" asp-action="Index">Torna alla lista</a>
+</div>
+<br />
+<br />
+<br />
+<partial name="_Details"  model="Model"/>
+

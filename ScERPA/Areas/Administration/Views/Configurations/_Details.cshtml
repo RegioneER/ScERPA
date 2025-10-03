@@ -1,0 +1,40 @@
+﻿@inject ScERPA.Services.Interfaces.ICommonServices commonServices
+@model ConfigurationDetailsViewModel
+<div tabindex="0">
+    <h4>ID: @Model.Id</h4>
+    <hr />
+    <br />
+    <dl class="row rounded shadow">
+        <dt class="col-sm-4 py-3">
+            @Html.DisplayNameFor(model => model.Nome)
+        </dt>
+        <dd class="col-sm-6 py-3">
+            @Html.DisplayFor(model => model.Nome)
+        </dd>
+        <dt class="col-sm-4 py-3">
+            @Html.DisplayNameFor(model => model.Ambiente)
+        </dt>
+        <dd class="col-sm-6 py-3">
+            @Html.DisplayFor(model => model.Ambiente)
+        </dd>
+        <dt class="col-sm-4 py-3">
+            @Html.DisplayNameFor(model => model.ApiManagerClientId)
+        </dt>
+        <dd class="col-sm-6 py-3">
+            @Html.DisplayFor(model => model.ApiManagerClientId)
+        </dd>
+        <dt class="col-sm-4 py-3">
+            @Html.DisplayNameFor(model => model.ApiManagerClientSecret)
+        </dt>
+        <dd class="col-sm-6 py-3">
+            @Html.DisplayFor(model => model.ApiManagerClientSecret)
+        </dd>
+        <dt class="col-sm-4 py-3">
+            @Html.DisplayNameFor(model => model.ApiManagerOauthEndpoint)
+        </dt>
+        <dd class="col-sm-6 py-3">
+            @Html.DisplayFor(model => model.ApiManagerOauthEndpoint)
+        </dd>
+
+    </dl>
+</div>

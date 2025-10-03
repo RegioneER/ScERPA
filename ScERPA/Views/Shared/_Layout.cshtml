@@ -1,0 +1,402 @@
+﻿@using ScERPA.Models;
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Hosting
+@using ScERPA.Services.Interfaces;
+@using System.Security.Claims;
+
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+@inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment env
+@inject ScERPA.Services.Interfaces.ICommonServices commonServices
+@inject ScERPA.Services.Interfaces.IConsumerServices consumerServices
+@inject IConfiguration Configuration
+
+<!DOCTYPE html>
+<html lang="it-it">
+<head>
+    <meta http-equiv="Cache-control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <meta charset="utf-8" >
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" >
+    <title>@ViewData["Title"]</title>
+    <link crossorigin='anonymous' rel="stylesheet" href='@($"{commonServices.BootstrapitaliaBase}/css/{commonServices.BootstrapitaliaCss}")' asp-append-version="true">
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true">
+    <link rel="shortcut icon" href="~/favicon.ico" type="image/x-icon" />
+    <script crossorigin='anonymous' src='@($"{commonServices.EChartsBase}/echarts.js")'></script>
+    <script crossorigin='anonymous' src='@($"{commonServices.EChartsBase}/i18n/langIT.js")'></script>
+</head>
+<body class="d-flex flex-column min-vh-100">
+    <div id="skiplinks" class="skiplinks">
+        <a id="SkipToMain" class="visually-hidden-focusable" href="#main">Vai al contenuto principale</a>
+        <a id="SkipToFooter" class="visually-hidden-focusable" href="#footer">Vai al piede di pagina</a>
+    </div>
+     
+     <header class="it-header-wrapper it-shadow">
+    
+      <div class="it-header-slim-wrapper">
+        <div class="container">
+          <div class="row">
+            <div class="col-12">
+                <div class="it-header-slim-wrapper-content">
+                    <a class="d-none d-lg-block navbar-brand" href="#" aria-label="vai a parent">
+                    <span class="icon it-slimbar-icon" aria-hidden="true" >
+                        <!--
+                        <img src="~/Images/Orma_white.png" alt="" aria-hidden="true" />
+                        -->
+                    </span>
+                    <span>Parent link</span>
+                </a>
+                    <div class="nav-mobile">
+                      <nav aria-label="Navigazione secondaria">
+                                    <a class="d-lg-none it-slimbar-icon" href="https://orma.regione.emilia-romagna.it" aria-label="vai a parent">
+                            <span class="icon" aria-hidden="true">
+                                            <!--
+                                            <img src="~/Images/Orma_white.png" alt="" aria-hidden="true" />
+                                            -->
+                            </span>
+                            <span>Parent link</span>
+                         </a>
+                      </nav>
+                    </div>
+                    <div class="it-header-slim-right-zone" role="navigation">
+
+                        @if (!SignInManager.IsSignedIn(User))
+                        {
+
+                            <div class="it-access-top-wrapper">
+                                <a class="btn btn-primary btn-icon btn-full" asp-area="Identity" asp-page="/Account/Login" aria-label="Accedi">
+                                    <span class="rounded-icon" aria-hidden="true">                                        
+                                        <svg class="icon icon-primary" aria-hidden="true">
+                                            <use crossorigin xlink:href='@(commonServices.SpritesPath+"/sprites.svg#it-user")' href='@(commonServices.SpritesPath+"/sprites.svg#it-user")'></use>
+                                        </svg>                                                                               
+                                    </span>
+                                    <span class="d-none d-lg-block">Accedi</span>
+                                </a>
+                            </div>
+                        } else 
+                        {
+          
+                            if (User.IsInRole("SuperAdmin"))
+                            {
+                                <div id="menuTenant" class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <span class="visually-hidden">Seleziona il tenant: tenant corrente=</span>
+                                        <span >@commonServices.TenantCorrente(int.Parse(User?.Claims?.ToList()?.Find(c => c.Type == "CurrentTenantId")?.Value + ""))?.Nome</span>
+                                        <svg class="icon d-none d-lg-block" aria-hidden="true">
+                                              <use xlink:href='@(commonServices.SpritesPath + "/sprites.svg#it-expand")' href='@(commonServices.SpritesPath + "/sprites.svg#it-expand")'></use>
+                                        </svg>
+                                    </a>
+                                    <div class="dropdown-menu" aria-labelledby="menuTenant">
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <div class="link-list-wrapper">
+                                                    <ul class="link-list">
+                                                                @foreach (Tenant tenant in commonServices.ListaTenant)
+                                                                {
+                                                                    <li>
+                                                                        <a class="dropdown-item list-item" asp-area="" asp-controller="Home" asp-action="SuperAdminChangeCurrentTenant" asp-route-newCurrentTenantId="@tenant.Id">
+                                                                            <span>
+                                                                                @tenant.Nome
+                                                                                @if (tenant.Id.ToString() == User?.Claims?.ToList()?.Find(c => c.Type == "CurrentTenantId")?.Value)
+                                                                                {
+                                                                                       <span class="visually-hidden">selezionato</span>
+                                                                                }
+                                                                            </span>
+                                                                        </a>
+                                                                    </li>
+                                                                }
+                                                                                                                     
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            } 
+
+                            <div class="it-user-wrapper nav-item dropdown">
+                                    <a aria-expanded="false" class="btn btn-primary btn-icon btn-full" data-bs-toggle="dropdown" href="#" data-focus-mouse="false">
+                                    <span class="rounded-icon">
+                                        <svg class="icon icon-primary" aria-hidden="true" alt="">
+                                             <use xlink:href='@(commonServices.SpritesPath+"/sprites.svg#it-user")' href='@(commonServices.SpritesPath+"/sprites.svg#it-user")'></use>
+                                        </svg>
+                                    </span>
+
+                                            <span class="d-none d-lg-block" aria-label='Utente @(User?.FindFirst(ClaimTypes.Surname)?.Value + " " + User?.FindFirst(ClaimTypes.GivenName)?.Value)'>@(User?.FindFirst(ClaimTypes.Surname)?.Value + " " + User?.FindFirst(ClaimTypes.GivenName)?.Value)</span>
+                                            <svg class="icon icon-white d-none d-lg-block" aria-hidden="true" alt="">
+                                         <use xlink:href='@(commonServices.SpritesPath + "/sprites.svg#it-expand")' href='@(commonServices.SpritesPath + "/sprites.svg#it-expand")'></use>
+                                    </svg>
+                                </a>
+                                <div class="dropdown-menu">
+
+                                            <div class="link-list-wrapper">
+                                                <ul class="link-list">
+                                                    <li>
+                                                       <a class="list-item slim" asp-area="Identity" asp-page="/Account/Manage/Index"><span>Il mio profilo</span></a>
+                                                    </li>
+                                                    <li aria-hidden="true">
+                                                        <span class="divider"></span>
+                                                    </li>
+                                                    <li>
+                                                           <a class="list-item left-icon slim" asp-area="Identity" asp-page="/Account/Logout">
+                                                            <svg class="icon icon-primary icon-sm left" aria-hidden="true" >
+                                                                        <use xlink:href='@(commonServices.SpritesPath + "/sprites.svg#it-external-link")' href='@(commonServices.SpritesPath + "/sprites.svg#it-external-link")'>
+                                                                </use>
+                                                            </svg>
+                                                            <span>Esci</span>
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+
+                                </div>
+                            </div>
+
+                        }
+                
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="it-nav-wrapper">
+        <div class="it-header-center-wrapper">
+          <div class="container">
+            <div class="row">
+              <div class="col-12">
+                <div class="it-header-center-content-wrapper">
+                  <div class="it-brand-wrapper">
+                    <a title="Vai alla homepage della applicazione" href="/" >
+                        <img class="icon it-brand-icon" src="/Images/scERPA.png" alt="" aria-hidden="true">
+                        <div class="it-brand-text">
+                            <div class="it-brand-title">
+                                @commonServices.BrandTitle
+                            </div>
+                            <div class="it-brand-tagline d-none d-md-block">La tua guida nei Servizi di Consultazione dei dati della PA</div>
+                        </div>
+                    </a>
+                  </div>
+                  <div class="it-right-zone">
+                    <div class="it-socials d-none d-md-flex">
+                    </div>
+                    <div class="it-search-wrapper">
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+            @if (User is not null && SignInManager.IsSignedIn(User))
+            {
+                <div class="it-header-navbar-wrapper">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-12">
+                                <!--start nav-->
+                                <nav class="navbar navbar-expand-lg has-megamenu" aria-label="Navigazione principale">
+                                    <button class="custom-navbar-toggler" type="button" aria-controls="navC2" aria-expanded="false" aria-label="Mostra/Nascondi la navigazione" data-bs-toggle="navbarcollapsible" data-bs-target="#navC2">
+                                        <svg class="icon" aria-hidden="true" >
+                                            <use xlink:href='@(commonServices.SpritesPath + "/sprites.svg#it-burger")' href='@(commonServices.SpritesPath + "/sprites.svg#it-burger")'></use>
+                                        </svg>
+                                    </button>
+                                    <div class="navbar-collapsable" id="navC2" style="display: none;">
+                                        <div class="overlay" style="display: none;"></div>
+                                        <div class="close-div">
+                                            <button class="btn close-menu" type="button">
+                                                <span class="visually-hidden">Nascondi la navigazione</span>
+                                                <svg class="icon" aria-hidden="true">
+                                                    <use xlink:href='@(commonServices.SpritesPath + "/sprites.svg#it-close-big")' href='@(commonServices.SpritesPath + "/sprites.svg#it-close-big")'></use>
+                                                </svg>
+                                            </button>
+                                        </div>
+                                        <div class="menu-wrapper justify-content-lg-between" role="navigation">
+                                            <ul class="navbar-nav">
+                                                @if (User is not null && SignInManager.IsSignedIn(User))
+                                                {
+                                                    @if (User.IsInRole("Consumer"))
+                                                    {
+                                                        string userId = UserManager?.GetUserId(User)?.ToString() + "";
+                                                        foreach (Area area in await consumerServices.GetUserAreasCachedListAsync(userId,false))
+                                                        {
+                                                            string nomearea = area.Nome;
+                                                            string nomemenu = "menu" + nomearea;
+                                                            int areaId = area.Id;
+
+                                                            <li class="nav-item dropdown">
+                                                                <a class="nav-link dropdown-toggle @(commonServices.CurrentMenu == nomearea ? "active" : "")" href="#" data-bs-toggle="dropdown" aria-expanded="false" id="@nomemenu">
+                                                                    <span>@nomearea</span>
+                                                                    <svg class="icon icon-xs" aria-hidden="true"> 
+                                                                        <use xlink:href='@(commonServices.SpritesPath + "/sprites.svg#it-expand")' href='@(commonServices.SpritesPath + "/sprites.svg#it-expand")'></use>
+                                                                    </svg>
+                                                                </a>
+                                                                <div class="dropdown-menu" role="region" aria-labelledby="@nomemenu">
+                                                                    @{
+                                                                        var servizi = await consumerServices.GetUserAreaServicesCachedListAsync(userId, areaId,false);
+                                                                        var sezioni = servizi.Select(x => x.Sezione).Distinct().ToList();
+                                                                        foreach(string sezione in sezioni)
+                                                                        {
+                                                                            <div class="link-list-wrapper">
+                                                                                <div class="link-list-heading">@(sezione == "" ? "Servizi" : sezione)</div>
+                                                                                <ul class="link-list" role="menu">
+                                                                                    @foreach (var servizio in servizi.Where(x=>x.Sezione==sezione).ToList())
+                                                                                    {
+                                                                                        string nomeServizio = servizio.Nome;
+                                                                                        string descrizioneServizio = servizio.Descrizione;
+                                                                                        <li role="presentation"><a role="menuitem" class="dropdown-item list-item" asp-area="" asp-controller="@nomearea" asp-action="@nomeServizio"><span>@descrizioneServizio</span></a></li>
+                                                                                    }
+                                                                                </ul>
+                                                                          
+                                                                            </div>
+                                                                        }
+
+                                                                    }
+                                                                </div>
+                                                            </li>
+                                                        }
+                                                    }
+
+
+                                                    @if (User.IsInRole("SuperAdmin") || User.IsInRole("Admin") || User.IsInRole("Manager"))
+                                                    {
+                                                        <li class="nav-item dropdown">
+                                                            <a class="nav-link dropdown-toggle @(commonServices.CurrentMenu == "Utenti" ? "active" : "")" href="#" data-bs-toggle="dropdown" aria-expanded="false" id="menuUtenti">
+                                                                <span>Utenti</span>
+                                                                <svg class="icon icon-xs" aria-hidden="true">
+                                                                    <use xlink:href='@(commonServices.SpritesPath + "/sprites.svg#it-expand")' href='@(commonServices.SpritesPath + "/sprites.svg#it-expand")'></use>
+                                                                </svg>
+                                                            </a>
+                                                            <div class="dropdown-menu" role="region" aria-labelledby="menuUtenti">
+                                                                <div class="link-list-wrapper">
+                                                                    <ul class="link-list" role="menu">
+                                                                        <li role="presentation"><a role="menuitem" class="dropdown-item list-item" asp-area="Administration" asp-controller="UsersAdmin" asp-action="Index"><span>Autorizza utenti a servizi/finalità</span></a></li>
+                                                                        @if (User.IsInRole("SuperAdmin") || User.IsInRole("Admin") || User.IsInRole("Manager"))
+                                                                        {
+                                                                            <li role="presentation"><a role="menuitem" class="dropdown-item list-item" asp-area="Administration" asp-controller="UsersAdmin" asp-action="IndexProfiles"><span>Gestisci profilo utenti</span></a></li>
+                                                                        }
+                                                                        <environment include="Development">
+                                                                        @if (User.IsInRole("SuperAdmin") || User.IsInRole("Admin"))
+                                                                        {
+                                                                            <li role="presentation"><a role="menuitem" class="dropdown-item list-item" asp-area="Identity" asp-page="/Account/Register"><span>Registra nuovo utente</span></a></li>
+                                                                        }
+                                                                        </environment>
+                                                                    </ul>
+                                                                </div>
+                                                            </div>
+                                                        </li>
+                                                        @if (User.IsInRole("SuperAdmin") || User.IsInRole("Admin"))
+                                                        {
+                                                            <li class="nav-item dropdown">
+                                                                <a class="nav-link dropdown-toggle @(commonServices.CurrentMenu == "E-Services" ? "active" : "")" href="#" data-bs-toggle="dropdown" aria-expanded="false" id="menuEServices">
+                                                                    <span>E-Services</span>
+                                                                    <svg class="icon icon-xs" aria-hidden="true">
+                                                                        <use xlink:href='@(commonServices.SpritesPath + "/sprites.svg#it-expand")' href='@(commonServices.SpritesPath + "/sprites.svg#it-expand")'></use>
+                                                                    </svg>
+                                                                </a>
+                                                                <div class="dropdown-menu" role="region" aria-labelledby="menuEServices">
+                                                                    <div class="link-list-wrapper">
+                                                                        <ul class="link-list" role="menu">
+                                                                            @if (User.IsInRole("SuperAdmin"))
+                                                                            {
+                                                                                <li role="presentation" class="nav-item"><a role="menuitem" class="nav-link" asp-area="Administration" asp-controller="EServicesAreas" asp-action="Index"><span>Aree</span></a></li>
+                                                                                <li role="presentation" class="nav-item"><a role="menuitem" class="nav-link" asp-area="Administration" asp-controller="EServices" asp-action="Index"><span>Servizi</span></a></li>
+                                                                            }
+                                                                            <li role="presentation" class="nav-item"><a role="menuitem" class="nav-link" asp-area="Administration" asp-controller="Finalities" asp-action="Index"><span>Finalità</span></a></li>
+                                                                            <li role="presentation" class="nav-item"><a role="menuitem" class="nav-link" asp-area="" asp-controller="RichiesteMassive" asp-action="Index"><span>Richieste Massive</span></a></li>
+                                                                        </ul>
+                                                                    </div>
+                                                                </div>
+                                                            </li>
+
+                                                            @if (User.IsInRole("SuperAdmin"))
+                                                            {
+                                                                <li class="nav-item dropdown">
+                                                                    <a class="nav-link dropdown-toggle @(commonServices.CurrentMenu == "Amministrazione" ? "active" : "")" href="#" data-bs-toggle="dropdown" aria-expanded="false" id="menuAmministrazione">
+                                                                        <span>Amministrazione</span>
+                                                                        <svg class="icon icon-xs" aria-hidden="true">
+                                                                            <use xlink:href='@(commonServices.SpritesPath + "/sprites.svg#it-expand")' href='@(commonServices.SpritesPath + "/sprites.svg#it-expand")'></use>                                                                           
+                                                                        </svg>
+                                                                    </a>
+                                                                    <div class="dropdown-menu" role="region" aria-labelledby="menuAmministrazione">
+                                                                        <div class="link-list-wrapper">
+                                                                            <ul class="link-list" role="menu">
+                                                                                <li role="presentation" class="nav-item"><a role="menuitem" class="nav-link" asp-area="Administration" asp-controller="Tenants" asp-action="Index"><span>Tenants</span></a></li>
+                                                                                <li role="presentation" class="nav-item"><a role="menuitem" class="nav-link" asp-area="Administration" asp-controller="Configurations" asp-action="Index"><span>Configurazioni API-Manager</span></a></li>
+                                                                            </ul>
+                                                                        </div>
+                                                                    </div>
+                                                                </li>
+                                                            }
+
+                                                        }
+                                                    }
+                                                }
+                                                <li class="nav-item dropdown">
+                                                    <a class="nav-link dropdown-toggle @(commonServices.CurrentMenu == "Aiuto" ? "active" : "")" href="#" data-bs-toggle="dropdown" aria-expanded="false" id="menuAiuto">
+                                                        <span>Aiuto</span>
+                                                        <svg class="icon icon-xs" aria-hidden="true">
+                                                            <use xlink:href='@(commonServices.SpritesPath + "/sprites.svg#it-expand")' href='@(commonServices.SpritesPath + "/sprites.svg#it-expand")'></use>
+                                                        </svg>
+                                                    </a>
+                                                    <div class="dropdown-menu" role="region" aria-labelledby="menuUtenti">
+                                                        <div class="link-list-wrapper">
+                                                            <ul class="link-list" role="menu">
+                                                                <li role="presentation"><a role="menuitem" class="dropdown-item list-item" aria-label="scarica il pdf del manuale Utente" href="/Manuali/ScERPA_Manuale_Utente.pdf"><span>Manuale Utente</span></a></li>
+                                                                @if (User is not null && User.IsInRole("Manager"))
+                                                                {
+                                                                    <li role="presentation"><a role="menuitem" class="dropdown-item list-item" aria-label="scarica il pdf del manuale Gestore" href="/Manuali/ScERPA_Manuale_Gestore.pdf"><span>Manuale Gestore</span></a></li>
+                                                                }
+                                                                @if (User is not null && User.IsInRole("Admin"))
+                                                                {
+                                                                    <li role="presentation"><a role="menuitem" class="dropdown-item list-item" aria-label="scarica il pdf del manuale Amministratore" href="/Manuali/ScERPA_Manuale_Amministratore.pdf"><span>Manuale Amministratore</span></a></li>
+                                                                }
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </nav>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+           
+      </div>
+    </header>
+
+
+
+    <div class="container">
+        <nav class="breadcrumb-container" aria-label="Percorso di navigazione">
+            <ol class="breadcrumb">                          
+                @if (!string.IsNullOrEmpty(commonServices.CurrentMenu))
+                {
+                    <li class="breadcrumb-item"><a href="/">Home</a><span class="separator">/</span></li>
+                    <li class="breadcrumb-item active" aria-current="page">@commonServices.CurrentMenu</li>
+                }
+            </ol>
+        </nav>
+        <main id="main" class="pb-3" aria-label="contenuto principale">
+            @RenderBody()
+        </main>
+    </div>
+
+    
+    <partial name="_Footer" />
+
+
+    <script crossorigin='anonymous' src='@(commonServices.JqueryBase+"/jquery.min.js")' asp-append-version="true"></script>
+    <script crossorigin='anonymous' src='@(commonServices.BootstrapitaliaBase + "/js/bootstrap-italia.bundle.min.js")' asp-append-version="true"></script>
+
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script>
+        bootstrap.loadFonts('@commonServices.FontPath');
+    </script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

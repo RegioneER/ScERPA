@@ -1,0 +1,19 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@inject ScERPA.Services.Interfaces.ICommonServices commonServices
+@using ScERPA.ViewModels
+@model AccertamentoMassivoViewModel
+<partial name="_Esito" />
+<br>
+<h1>@ViewData["Title"]</h1>
+<br />
+<hr />
+<br>
+
+<partial name="_AccertamentoMassivo" model="@Model">
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+    <script src="/js/Spinner.js" ></script>
+
+}

@@ -1,0 +1,21 @@
+﻿@page
+@model LogoutModel
+@{
+    ViewData["Title"] = "Pagina di uscita";
+}
+
+<header>
+    <h1>@ViewData["Title"]</h1>
+    @{
+        if (User is not null && User.Identity is not null && User.Identity.IsAuthenticated)
+        {
+            <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/", new { area = "" })" method="post">
+                <button type="submit" class="btn btn-primary">Confermi di voler uscire dall'applicazione?</button>
+            </form>
+        }
+        else
+        {
+            <p>Sei uscito dall'applicazione'.</p>
+        }
+    }
+</header>

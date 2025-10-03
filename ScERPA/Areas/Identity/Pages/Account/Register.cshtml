@@ -1,0 +1,53 @@
+﻿@page
+@model RegisterModel
+@{
+    ViewData["Title"] = "Registra";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<div class="row">
+    <div class="col-md-4">
+        <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+            <h2>Registra un nuovo utente.</h2>
+            <hr />
+            <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+            <div class="form-group mb-3 mt-4">
+                <label class="active" asp-for="Input.Username">Nome utente</label>
+                <input type="text" asp-for="Input.Username" class="form-control" autocomplete="username" aria-required="true" placeholder="RERSDM\Rossi_M oppure EXRARER\Mario.Rossi" />
+                <span asp-validation-for="Input.Username" class="text-danger"></span>
+            </div>
+            <div class="form-group mb-3">
+                <label class="active" asp-for="Input.Cognome">Cognome</label>
+                <input type="text" asp-for="Input.Cognome" class="form-control" autocomplete="cognome" aria-required="true" placeholder="Rossi" />
+                <span asp-validation-for="Input.Cognome" class="text-danger"></span>
+            </div>
+            <div class="form-group mb-3">
+                <label class="active" asp-for="Input.Nome">Nome</label>
+                <input type="text" asp-for="Input.Nome" class="form-control" autocomplete="nome" aria-required="true" placeholder="Mario" />
+                <span asp-validation-for="Input.Nome" class="text-danger"></span>
+            </div>
+            <div class="form-group mb-3 mt-4">
+                <label class="active" asp-for="Input.Email">Email</label>
+                <input type="email" asp-for="Input.Email" class="form-control" autocomplete="email" aria-required="true" placeholder="mario.rossi@esempio.it" />
+                <span asp-validation-for="Input.Email" class="text-danger"></span>
+            </div>
+            <div class="form-group mb-3 mt-4">
+                <label class="active" asp-for="Input.Password">Password</label>
+                <input type="password" asp-for="Input.Password" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
+                <span asp-validation-for="Input.Password" class="text-danger"></span>
+            </div>
+            <div class="form-group mb-3 mt-4">
+                <label class="active" asp-for="Input.ConfirmPassword">Conferma Password</label>
+                <input type="password" asp-for="Input.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
+                <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+            </div>
+            <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Registra</button>
+        </form>
+    </div>
+
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,0 +1,38 @@
+﻿@inject ScERPA.Services.Interfaces.ICommonServices commonServices
+@model UserAdminViewModel
+<div tabindex="0">
+    <div class="neutral-2-bg">
+        <h4>@Model.Cognome @Model.Nome</h4>
+        <h5>@Model.Email</h5>
+    </div>
+    <hr />
+    <h6>Lista Aree-Servizi-Finalità</h6>
+    <br>
+    <div class="table-responsive rounded shadow">
+        <table id="TabellaUtentiDaAmministrare" name="TabellaUtentiDaAmministrare" class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th scope="col">Area</th>
+                    <th scope="col">Servizio</th>
+                    <th scope="col">Finalità</th>
+                </tr>
+            </thead>
+            <tbody>
+            @foreach(UserAdminAreaServiceFinalityListItem abilitazione in Model.Abilitazioni)
+            {
+                <tr>
+                   <td>
+                       @abilitazione.Area
+                   </td>
+                    <td>
+                        @abilitazione.Servizio
+                    </td>
+                    <td>
+                        @abilitazione.Finalita
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+</div>

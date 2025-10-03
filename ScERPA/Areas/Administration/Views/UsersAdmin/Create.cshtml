@@ -1,0 +1,61 @@
+﻿@inject ScERPA.Services.Interfaces.ICommonServices commonServices
+@model UserAminAssociatePurpouseViewModel
+<div class="clearfix">
+    <h1 class="float-start mt-3">@ViewData["Title"]</h1>
+    <a class="btn float-end" role="button" asp-area="Administration" asp-controller="UsersAdmin" asp-action="Index">Torna alla lista</a>
+</div>
+<br />
+<hr />
+<br>
+<section name="dati_associazione_finalità_utente" class="lightgrey-bg-a3 rounded shadow py-3" aria-label="dati associazione finalità-utente">
+    <em class="px-3">I campi con * sono obbligatori</em>
+<br>
+<br>
+     <div class="neutral-2-bg px-3">
+        <h4>@Model.Cognome @Model.Nome</h4>
+        <h5>@Model.Email</h5>
+    </div>
+    <hr />
+    <h6 class="px-3">Lista Aree-Servizi-Finalità</h6>
+    <br>
+    <form class="px-3" asp-area="Administration" asp-controller="UsersAdmin" asp-action="Create">
+        <div asp-validation-summary="All" class="text-danger" role="alert"></div>
+        <div class="form-group mt-3">
+            <label asp-for="Input.UserId" class="active d-none">UserId*</label>
+            <input asp-for="Input.UserId" class="form-control d-none" value="@Model.Input.UserId" aria-required="true" autocomplete="off" />
+            <span asp-validation-for="Input.UserId" class="text-danger d-none"></span>
+        </div>
+        <div class="select-wrapper">
+            <label asp-for='Input.AreaId' class="active mt-3">Area*</label>
+            <select asp-for='Input.AreaId' asp-items="@Model.Aree" class="form-control" onchange="GetServicesList();" aria-required="true" autocomplete="off">
+                <option value="">...</option>
+            </select>
+            <span asp-validation-for="Input.AreaId" class="text-danger"></span>
+        </div>
+        <div class="select-wrapper mt-3">
+            <label asp-for='Input.ServizioId' class="active mt-3">Servizio*</label>
+            <select asp-for='Input.ServizioId' asp-items="@Model.Servizi" class="form-control" onchange="GetPurpousesList();" aria-required="true" autocomplete="off">
+                <option value="">...</option>
+            </select>
+            <span asp-validation-for="Input.ServizioId" class="text-danger"></span>
+        </div>
+        <div class="select-wrapper mt-3">
+            <label asp-for='Input.FinalitaId' class="active mt-3">Finalità*</label>
+            <select asp-for='Input.FinalitaId' asp-items="@Model.ListaFinalita" class="form-control" aria-required="true" autocomplete="off">
+                <option value="">...</option>
+            </select>
+            <span asp-validation-for="Input.FinalitaId" class="text-danger"></span>
+        </div>
+        <div class="form-group mt-3">
+            <button type="submit" class="btn btn-primary">Salva</button>
+        </div>
+    </form>
+
+</section>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script src="/js/Utilities.js"></script>
+}

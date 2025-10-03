@@ -1,0 +1,16 @@
+﻿@inject ScERPA.Services.Interfaces.ICommonServices commonServices
+@{
+    ViewData["Title"] = "Benvenuto su ScERPA";
+}
+<br>
+<div >
+    <h1>@ViewData["Title"]</h1>
+    <p>Servizio di Consultazione dei dati della PA.</p>
+
+    <div class="alert alert-info" role="alert">
+       In questo momento non sei autenticato oppure è scaduta la sessione: <br />
+       premi il pulsante "<b>Acccedi</b>" in alto a destra per autenticarti e utilizzare tutte le funzionalità.
+    </div>
+
+   
+</div>

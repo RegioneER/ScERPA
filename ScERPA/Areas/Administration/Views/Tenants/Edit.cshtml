@@ -1,0 +1,60 @@
+﻿@inject ScERPA.Services.Interfaces.ICommonServices commonServices
+@model TenantEditCreateViewModel
+<div class="clearfix mt-3">
+    <h1 class="float-start">@ViewData["Title"]</h1>
+    <a class="btn float-end" role="button" asp-area="Administration" asp-controller="Tenants" asp-action="Index">Torna alla lista</a>
+</div>
+<br />
+<hr />
+<br>
+<section name="dati_tenant" class="lightgrey-bg-a3 rounded shadow py-3" aria-label="dati tenant">
+    <em class="px-3">I campi con * sono obbligatori</em>
+
+    <form asp-area="Administration" asp-controller="Tenants" asp-action="Edit" class="px-3">
+        <div asp-validation-summary="All" class="text-danger" role="alert"></div>
+        <div class="form-group mt-3">
+            <label asp-for="inputModel.Id" class="active d-none">Id*</label>
+            <input asp-for="inputModel.Id" class="form-control d-none" value="@Model.inputModel.Id" aria-required="true" autocomplete="off" />
+            <span asp-validation-for="inputModel.Id" class="text-danger"></span>
+        </div>
+        <div class="form-group mt-3">
+            <label asp-for="inputModel.Nome" class="active">Nome*</label>
+            <input asp-for="inputModel.Nome" class="form-control" value="@Model.inputModel.Nome" aria-required="true" autocomplete="off" />
+            <span asp-validation-for="inputModel.Nome" class="text-danger"></span>
+        </div>
+        <div class="form-group mt-3">
+            <label asp-for="inputModel.Parent" class="active">Parent*</label>
+            <input asp-for="inputModel.Parent" class="form-control" value="@Model.inputModel.Parent" aria-required="true" autocomplete="off" />
+            <span asp-validation-for="inputModel.Parent" class="text-danger"></span>
+        </div>
+        <div class="form-group mt-3">
+            <label asp-for="inputModel.Url" class="active">Url*</label>
+            <input asp-for="inputModel.Url" class="form-control" value="@Model.inputModel.Url" aria-required="true" autocomplete="off" />
+            <span asp-validation-for="inputModel.Url" class="text-danger"></span>
+        </div>
+        <div class="form-group mt-3">
+            <label asp-for="inputModel.Logo" class="active">Logo*</label>
+            <input asp-for="inputModel.Logo" class="form-control" value="@Model.inputModel.Logo" aria-required="true" autocomplete="off" />
+            <span asp-validation-for="inputModel.Logo" class="text-danger"></span>
+        </div>
+
+        <div class="select-wrapper mt-3">
+            <label asp-for='inputModel.ConfigurationId' class="active">Configurazione</label>
+            <select asp-for='inputModel.ConfigurationId' asp-items="@Model.Configurazioni" class="form-control" aria-required="true" value="@Model.inputModel.ConfigurationId" autocomplete="off">
+                <option value="">...</option>
+            </select>           
+            <span asp-validation-for="inputModel.ConfigurationId" class="text-danger"></span>
+        </div>
+
+        <div class="form-group mt-3">
+            <button type="submit" class="btn btn-primary">Salva</button>
+        </div>
+     </form>
+</section>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+

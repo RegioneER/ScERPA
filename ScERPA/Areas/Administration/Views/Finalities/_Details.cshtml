@@ -1,0 +1,69 @@
+﻿@inject ScERPA.Services.Interfaces.ICommonServices commonServices
+@model FinalityDetailsViewModel
+<div tabindex="0">
+    <h4>ID: @Model.Id</h4>
+    <hr />
+    <dl class="row rounded shadow">
+        <dt class="col-sm-2 py-3">
+            @Html.DisplayNameFor(model => model.Nome)
+        </dt>
+        <dd class="col-sm-10 py-3">
+            @Html.DisplayFor(model => model.Nome)
+        </dd>
+        <dt class="col-sm-2 py-3">
+            @Html.DisplayNameFor(model => model.Area )
+        </dt>
+        <dd class="col-sm-10 py-3">
+            @Html.DisplayFor(model => model.Area)
+        </dd>
+        <dt class="col-sm-2 py-3">
+            @Html.DisplayNameFor(model => model.Servizio)
+        </dt>
+        <dd class="col-sm-10 py-3">
+            @Html.DisplayFor(model => model.Servizio)
+        </dd>
+        <dt class="col-sm-2 py-3">
+            @Html.DisplayNameFor(model => model.Attivo)
+        </dt>
+        <dd class="col-sm-10 py-3">
+            @Html.DisplayFor(model => model.Attivo)
+        </dd>
+        <dt class="col-sm-2 py-3">
+            @Html.DisplayNameFor(model => model.Descrizione)
+        </dt>
+        <dd class="col-sm-10 py-3">
+            @Html.DisplayFor(model => model.Descrizione)
+        </dd>
+        <dt class="col-sm-2 py-3">
+            @Html.DisplayNameFor(model => model.ChiamateMassime)
+        </dt>
+        <dd class="col-sm-10 py-3">
+            @Html.DisplayFor(model => model.ChiamateMassime)
+        </dd>
+
+        <dt class="col-sm-2 py-3">
+            @Html.DisplayNameFor(model => model.DataDal)
+        </dt>
+        <dd class="col-sm-10 py-3">
+            @Html.DisplayFor(model => model.DataDal)
+        </dd>
+        <dt class="col-sm-2 py-3">
+            @Html.DisplayNameFor(model => model.DataAl)
+        </dt>
+        <dd class="col-sm-10 py-3">
+            @Html.DisplayFor(model => model.DataAl)
+        </dd>
+        <dt class="col-sm-2 py-3">
+            @Html.DisplayNameFor(model => model.PurpouseCod)
+        </dt>
+        <dd class="col-sm-10 py-3">
+            @Html.DisplayFor(model => model.PurpouseCod)
+        </dd>
+        <dt class="col-sm-2 py-3">
+            @Html.DisplayNameFor(model => model.PurpouseCodDataDal)
+        </dt>
+        <dd class="col-sm-10 py-3">
+            @Html.DisplayFor(model => model.PurpouseCodDataDal)
+        </dd>
+    </dl>
+</div>

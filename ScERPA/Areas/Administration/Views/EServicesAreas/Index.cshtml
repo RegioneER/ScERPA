@@ -1,0 +1,28 @@
+﻿@inject ScERPA.Services.Interfaces.ICommonServices commonServices
+@model AreasListViewModel
+<partial name="_Esito" />
+<br />
+<div>
+    <h1>@ViewData["Title"]</h1>
+</div>
+<div class="table-responsive rounded shadow">
+    <table id="TabellaAreas" name="TabellaAreas" class="table table-striped table-hover">
+        <thead>
+            <tr>
+                <th scope="col">Id</th>
+                <th scope="col">Nome area</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var elemento in Model.Elenco)
+            {
+                <tr>
+                    <td>@elemento.Id</td>
+                    <td><a asp-area="Administration" asp-controller="EServicesAreas" asp-action="Details" asp-route-id="@elemento.Id" aria-label="Dettaglio area @elemento.Nome"><span>@elemento.Nome</span></a></td>         
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<br />
+

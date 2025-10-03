@@ -1,0 +1,28 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using ScERPA.Services.Interfaces;
+@using System.Security.Claims;
+@inject ScERPA.Services.Interfaces.ICommonServices commonServices
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+@{
+    var utente = User?.FindFirst(ClaimTypes.Surname)?.Value + " " + User?.FindFirst(ClaimTypes.GivenName)?.Value;
+    ViewData["Title"] = $"Benvenuto su ScERPA {utente}";
+}
+<br>
+
+<h1>@ViewData["Title"]</h1>
+<p>Servizio di Consultazione dei dati della PA.</p>
+   
+
+
+@if (commonServices.Sperimental)
+{
+    <partial name="_grafico" />
+
+    <script type="text/javascript" defer>
+
+        window.addEventListener('resize', function () {
+            myChart.resize();
+        });
+    </script>
+}

@@ -1,0 +1,140 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@inject ScERPA.Services.Interfaces.ICommonServices commonServices
+@using ScERPA.ViewModels
+@model VerificaCittadinanzaViewModel
+<partial name="_Esito" />
+<br>
+<h1>@ViewData["Title"]</h1>
+<br />
+<hr />
+<br>
+@if (Model.risultati is not null && ViewData.ModelState.IsValid)
+{
+    <h2 id="lblRisultatiRicerca">Risultati della ricerca</h2>
+    <br>
+    <div class="px-3 mt-2">
+        @if (!string.IsNullOrEmpty(Model.Pdf))
+        {
+            <a class="btn btn-outline-primary" role="button" download="VerificaCittadinanzaItaliana_@DateTime.Now.ToString("dd_MM_yyyy")" href="data:application/pdf;base64,@Model.Pdf">
+                <span>Esporta in pdf</span>
+                <svg class="icon icon-primary ms-1" aria-hidden="true">
+                    <use xlink:href='@(commonServices.SpritesPath+"/sprites.svg#it-download")' href='@(commonServices.SpritesPath+"/sprites.svg#it-download")'></use>
+                </svg>
+            </a>
+        }
+
+        @if (!string.IsNullOrEmpty(Model.Xlsx))
+        {
+            <a class="btn btn-outline-primary" role="button" download="VerificaCittadinanzaItaliana_@DateTime.Now.ToString("dd_MM_yyyy")" href="data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,@Model.Xlsx">
+                <span>Esporta in Excel</span>
+                <svg class="icon icon-primary ms-1" aria-hidden="true">
+                    <use xlink:href='@(commonServices.SpritesPath+"/sprites.svg#it-download")' href='@(commonServices.SpritesPath+"/sprites.svg#it-download")'></use>
+                </svg>
+            </a>
+        }
+    </div>
+    <br>
+    <section name="risultatiricerca" aria-labelledby="lblRisultatiRicerca" tabindex="0">
+        <br>
+        @if (Model.risultati.Count > 0)
+        {
+            <hr />
+            <br>
+            <div class="table-responsive">
+                <table class="table table-striped table-hover rounded shadow">
+                    <thead>
+                        <tr>
+                            <th scope="col">Codice Fiscale</th>
+                            <th scope="col">Cittadinanza italiana</th>
+                            <th scope="col">Nota</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (RisultatoVerificaCittadinanzaViewModel soggetto in Model.risultati)
+                        {
+                            <tr id="@soggetto.CodiceFiscale" >
+                                <td>@soggetto.CodiceFiscale</td>
+                                @if (soggetto.Errore != "")
+                                {
+                                    <td>
+                                        N/D
+                                    </td>
+                                }
+                                else
+                                {
+                                    <td>
+                                        @(soggetto.CittadinanzaItaliana ? "Si" : "No")
+                                    </td>
+                                }
+                                <td>@soggetto.Errore</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        } else
+        {
+            <div class="alert alert-info" role="alert">
+                <p>Nessun risultato</p>
+            </div>            
+        }
+
+    </section>
+    <br>
+    <hr />
+    <br>
+}
+<section name="parametriricerca" class="lightgrey-bg-a3 rounded shadow py-3" aria-label="Parametri di ricerca" tabindex="0">
+    <em class="px-3"> I campi con * sono obbligatori</em>
+    <form id="FormVerifica" name="FormVerifica" method="post" asp-controller="ANPR" asp-action="VerificaCittadinanzaItaliana" asp-route-input="@Model.inputModel" class="px-3">
+        <div class="form-group col-12 mt-5">
+            <div asp-validation-summary="All" class="text-danger" role="alert"></div>
+            <div class="select-wrapper">
+                <label asp-for='inputModel.FinalitaId' class="active">Finalità*</label>
+                <select asp-for='inputModel.FinalitaId' asp-items="@Model.ListaFinalita" class="form-control" aria-required="true" autocomplete="off">
+                    <option value="" selected="">...</option>
+                </select>
+                <span asp-validation-for="inputModel.FinalitaId" class="text-danger"></span>
+            </div>
+            <div class="form-group col-7 col-lg-5 col-xl-4 col-xxl-3 mt-5">
+                <label asp-for="inputModel.DataRiferimentoVerifica" class="active">Data di riferimento della verifica*</label>
+                <input type="date" asp-for="inputModel.DataRiferimentoVerifica" class="form-control" value="@Model.inputModel.DataRiferimentoVerifica" aria-required="true" autocomplete="off">
+                <span asp-validation-for="inputModel.DataRiferimentoVerifica" class="text-danger"></span>
+            </div>
+            <div class="form-group col-8  mt-5">
+                <label asp-for="inputModel.CodiciFiscali" class="active">Lista dei codici fiscali da verificare*</label>
+                <textarea rows="10" maxrows="@Model.NumeroMassimoCodiciFiscali" asp-for="inputModel.CodiciFiscali" class="form-control" autocomplete="off">@Model.inputModel.CodiciFiscali</textarea>
+                <span asp-validation-for="inputModel.CodiciFiscali" class="text-danger"></span>
+            </div>
+
+        </div>
+        <div class="mt-5">
+            <div class="form-check">
+                @Html.EditorFor(m => m.inputModel.Dichiarazione, new { htmlAttributes = new { @aria_described_by = "inputModel_Dichiarazione-help" } })
+                <label asp-for="inputModel.Dichiarazione" class="active">Dichiaro di utilizzare il servizio esclusicamente per la finalità indicata.*</label>
+                <br>
+                <small id="inputModel_Dichiarazione-help" class="form-text">Si rammenta che che l’erogatore dei servizi conserva traccia di ogni chiamata ed è in grado di determinare quali servizi sono stati utilizzati da un determinato utente, quale finalità è stata indicata oltre a data e ora della postazione da cui è avvenuta la chiamata.</small>
+                <br>
+                <span asp-validation-for="inputModel.Dichiarazione" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <button id="submitBtn" name="submitBtn" type="submit" class="btn btn-primary">Controlla</button>
+            </div>
+        </div>
+        <div id="spinner" class="progress progress-indeterminate d-none" tabindex="-1">
+            <span class="visually-hidden" aria-label="In elaborazione...">In elaborazione...</span>
+            <div class="progress-bar" role="progressbar"></div>
+            <br />
+        </div>
+
+    </form>
+</section>
+
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+    <script src="/js/Spinner.js" ></script>
+}

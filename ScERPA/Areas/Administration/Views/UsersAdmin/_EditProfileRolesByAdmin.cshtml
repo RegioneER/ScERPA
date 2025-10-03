@@ -1,0 +1,13 @@
+﻿@inject ScERPA.Services.Interfaces.ICommonServices commonServices
+@model UserAminEditProfileViewModel
+
+<div class="row mt-4">
+    <div col="col-1">
+        <div class="form-check form-check-group">
+            @Html.EditorFor(m => m.Input.isManager)
+            <label asp-for="Input.isManager">Profilo Manager</label>
+            <small id="Input_isManager-help" class="form-text">L'utente Manager è un gestore di consumatori di servizi</small>
+            <span asp-validation-for="Input.isManager" class="text-danger"></span>
+        </div>
+    </div>
+</div>

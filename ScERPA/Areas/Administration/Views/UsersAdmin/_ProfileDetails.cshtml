@@ -1,0 +1,30 @@
+﻿@inject ScERPA.Services.Interfaces.ICommonServices commonServices
+@model UserAdminUserProfileViewModel
+<div tabindex="0">
+    <div class="neutral-2-bg">
+        <h4>@Model.Cognome @Model.Nome</h4>
+        <h5>@Model.Email</h5>
+    </div>
+    <hr />
+    <dl class="row rounded shadow">
+        <dt class="col-sm-2 py-3">
+            @Html.DisplayNameFor(model => model.Attivo)
+        </dt>
+        <dd class="col-sm-10 py-3">
+            @(Model.Attivo ? "Si" : "No")
+        </dd>
+        <dt class="col-sm-2 py-3">
+            @Html.DisplayNameFor(model => model.Ruoli)
+        </dt>
+        <dd class="col-sm-10 py-3">
+            @string.Join(",", Model.Ruoli.ToArray())
+        </dd>
+                <dt class="col-sm-2 py-3">
+            @Html.DisplayNameFor(model => model.Tenants)
+        </dt>
+        <dd class="col-sm-10 py-3">
+            @string.Join(",", Model.Tenants.ToArray())
+        </dd>
+
+    </dl>
+</div>
