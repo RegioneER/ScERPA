@@ -9,7 +9,7 @@ description:
   it:
     features:
       - Interfaccia grafica per utilizzo servizi PDND (ANPR)
-    genericName: ' ScERPA (Servizio di Consultazione della Emilia-Romagna dei dati della PA)'
+    genericName: 'ScERPA (Servizio di Consultazione della Emilia-Romagna dei dati della PA)'
     longDescription: |
       WebUI di accesso ai servizi esposti tramite PDND in particolare ANPR, il sistema si interfaccia con un API-Gateway che implementa le chiamate ai servizi compatibilmente con il flusso previsto da PDND
     screenshots:
