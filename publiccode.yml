@@ -24,7 +24,7 @@ description:
       - Gesione utenze e permessi per accesso agli e-services
       - Interrogazioni di servizi ANPR per gruppi limitati di codici fiscali
     screenshots:
-      - https://github.com/RegioneER/ScERPA/blob/master/ScERPA.jpg
+      - ScERPA.jpg
 legal:
   license: AGPL-3.0-or-later
 maintenance:
