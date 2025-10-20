@@ -1,0 +1,53 @@
+publiccodeYmlVersion: 0.4.0
+name: ScERPA
+applicationSuite: ScERPA
+url: https://github.com/RegioneER/ScERPA
+landingURL: https://github.com/RegioneER/ScERPA/blob/master/README.md
+softwareVersion: "1.0"
+releaseDate: 2025-11-28
+platforms:
+  - web
+categories:
+  - data-collection
+usedBy:
+  - Regione Emilia-Romagna
+developmentStatus: development
+softwareType: standalone/web
+description:
+  it-IT:
+    localisedName: ScERPA (Servizio di Consultazione della Emilia-Romagna dei dati della PA)
+    shortDescription: WebUI di accesso ai servizi esposti tramite PDND in particolare ANPR
+    longDescription: WebUI di accesso ai servizi esposti tramite PDND in particolare
+      ANPR, il sistema si interfaccia con un API-Gateway che implementa le
+      chiamate ai servizi compatibilmente con il flusso previsto da PDND
+    features:
+      - Gesione utenze e permessi per accesso agli e-services
+      - Interrogazioni di servizi ANPR per gruppi limitati di codici fiscali
+    screenshots:
+      - ScERPA.jpg
+legal:
+  license: AGPL-3.0-or-later
+maintenance:
+  type: internal
+  contacts:
+    - name: Stefano Flamigni
+      email: applicazionisettoriali@regione.emilia-romagna.it
+localisation:
+  localisationReady: false
+  availableLanguages:
+    - it-IT
+it:
+  countryExtensionVersion: "1.0"
+  conforme:
+    lineeGuidaDesign: true
+    modelloInteroperabilita: true
+    misureMinimeSicurezza: true
+    gdpr: true
+  piattaforme:
+    spid: false
+    cie: false
+    anpr: true
+    pagopa: false
+    io: false
+  riuso:
+    codiceIPA: r_emiro
