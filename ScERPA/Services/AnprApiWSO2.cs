@@ -255,16 +255,16 @@ namespace ScERPA.Services
                     {
                         token = getAuthTokenResult.Data;
                         var _ = clienthandler = new HttpClientHandler();
-                        clienthandler.AllowAutoRedirect = true;                 
+                        clienthandler.AllowAutoRedirect = true;
 
                         if (_useProxy)
                         {
-                            
+
                             clienthandler.Proxy = new WebProxy()
                             {
                                 Address = new Uri(this._address),
                                 UseDefaultCredentials = this._useDefaultCredentials
-                            };                           
+                            };
                         }
 
                         var content = new StringContent(payload, Encoding.Default, "application/json");
@@ -298,7 +298,7 @@ namespace ScERPA.Services
 
                                 //Inserita logica di retry
                                 client.Timeout = TimeSpan.FromSeconds(30);
-       
+
 
                                 var retryPolicy = Policy
                                                 .Handle<HttpRequestException>()
@@ -319,12 +319,13 @@ namespace ScERPA.Services
                                                             else if ((bool)response?.Result?.Headers?.RetryAfter?.Date.HasValue)
                                                             {
 
-                                                                var now = DateTimeOffset.UtcNow;                                                               
+                                                                var now = DateTimeOffset.UtcNow;
 
                                                                 TimeSpan delay = (TimeSpan)(response?.Result?.Headers?.RetryAfter?.Date.Value - now) + jitter + TimeSpan.FromSeconds(Math.Pow(2, retryAttempt));
                                                                 return delay > TimeSpan.Zero ? delay : jitter + TimeSpan.FromSeconds(Math.Pow(2, retryAttempt));
 
-                                                            };                                                            
+                                                            }
+                                                            ;
 
                                                             return jitter + TimeSpan.FromSeconds(Math.Pow(3, retryAttempt));
                                                         },
@@ -345,7 +346,7 @@ namespace ScERPA.Services
 
                                     if (response.IsSuccessStatusCode)
                                     {
-                                        
+
                                         responsestream = await response.Content.ReadAsStringAsync();
 
                                         using (LogContext.PushProperty("OperationGuid", operationGuid)) _logger.LogDebug("Response:{Response}", responsestream);
@@ -363,7 +364,7 @@ namespace ScERPA.Services
                                             else
                                             {
                                                 risposta.Status = ApiResultStatus.DeserializeError;
-                                                risposta.Message = "Impossibile deserializzare il risultato della chiamata API-ANPR";
+                                                risposta.Message = "Impossibile deserializzare il risultato della chiamata API-ANPR si prega di riprovare più tardi;";
                                                 using (LogContext.PushProperty("OperationGuid", operationGuid)) _logger.LogError("{Message}", risposta.Message);
                                             }
 
@@ -372,7 +373,7 @@ namespace ScERPA.Services
                                         else
                                         {
                                             risposta.Status = ApiResultStatus.EmptyResult;
-                                            risposta.Message = "Impossibile ottenere il risultato della chiamata API-ANPR";
+                                            risposta.Message = "Impossibile ottenere il risultato della chiamata API-ANPR si prega di riprovare più tardi;";
                                             using (LogContext.PushProperty("OperationGuid", operationGuid)) _logger.LogError("{Message}", risposta.Message);
                                         }
 
@@ -380,48 +381,60 @@ namespace ScERPA.Services
                                     else if (response.StatusCode == HttpStatusCode.NotFound)
                                     {
                                         responsestream = await response.Content.ReadAsStringAsync();
+                                        risultatoKo = JsonSerializer.Deserialize<RispostaE002KO>(responsestream, options);
                                         risposta.Status = ApiResultStatus.NotFound;
-                                        risposta.Message = "Il soggetto non è presente in anagrafica";
-                                        using (LogContext.PushProperty("OperationGuid", operationGuid)) _logger.LogWarning("{Message}", risposta.Message);
+                                        if (risultatoKo is not null)
+                                        {
+                                            string errori = LeggiErrori(risultatoKo.listaErrori);
+                                            risposta.Message = string.IsNullOrEmpty(errori) ? "Il soggetto non è presente in anagrafica o i dati non sono disponibili alla data verifica;" : errori;
+                                            using (LogContext.PushProperty("OperationGuid", operationGuid)) _logger.LogWarning("{Message}", risposta.Message);
+
+                                        }
+                                        else
+                                        {
+                                            risposta.Message = "Il soggetto non è presente in anagrafica o i dati non sono disponibili alla data verifica"; ;
+                                            using (LogContext.PushProperty("OperationGuid", operationGuid)) _logger.LogWarning("{Message}", risposta.Message);
+                                        }
+
                                     }
-                                    else if (response.StatusCode == HttpStatusCode.BadRequest )
+                                    else if (response.StatusCode == HttpStatusCode.BadRequest)
                                     {
                                         risposta.Status = ApiResultStatus.BadRequest;
                                         responsestream = await response.Content.ReadAsStringAsync();
                                         risultatoKo = JsonSerializer.Deserialize<RispostaE002KO>(responsestream, options);
                                         if (risultatoKo is not null)
                                         {
-                                            if (risultatoKo.listaErrori is not null && risultatoKo.listaErrori.Where(t => t.codiceErroreAnomalia == "EN148").Count() > 0)
-                                            {
-                                                risposta.Message = "Il soggetto risulta deceduto";
-                                                using (LogContext.PushProperty("OperationGuid", operationGuid)) _logger.LogWarning("{Message}", risposta.Message);
-                                            }
+                                            string errori = LeggiErrori(risultatoKo.listaErrori);
+                                            risposta.Message = string.IsNullOrEmpty(errori) ? "La richiesta ad ANPR è fallita con esito Bad-Request si prega di riprovare più tardi;" : errori;
+                                            using (LogContext.PushProperty("OperationGuid", operationGuid)) _logger.LogWarning("{Message}", risposta.Message);
+
                                         }
                                         else
                                         {
                                             risposta.Status = ApiResultStatus.DeserializeError;
-                                            risposta.Message = "Impossibile deserializzare la lista errori della chiamata API-ANPR";
+                                            risposta.Message = "Impossibile deserializzare la lista errori della chiamata API-ANPR si prega di riprovare più tardi;";
                                             using (LogContext.PushProperty("OperationGuid", operationGuid)) _logger.LogWarning("{Message}", risposta.Message);
                                         }
 
-                                    } else
+                                    }
+                                    else
                                     {
                                         risposta.Status = ApiResultStatus.FailedOnServiceProvider;
-                                        risposta.Message = "La chiamata API-ANPR è fallita su ANPR";
+                                        risposta.Message = "La chiamata API-ANPR è fallita su ANPR si prega di riprovare più tardi;";
                                         using (LogContext.PushProperty("OperationGuid", operationGuid)) _logger.LogError("{Message}", risposta.Message);
                                     }
                                 }
                                 catch
                                 {
                                     risposta.Status = ApiResultStatus.FailedOnServiceProviderGeneric;
-                                    risposta.Message = "La chiamata API-ANPR è fallita";
+                                    risposta.Message = "La chiamata API-ANPR è fallita si prega di riprovare più tardi;";
                                     using (LogContext.PushProperty("OperationGuid", operationGuid)) _logger.LogError("{Message}", risposta.Message);
                                 }
                             }
                             catch
                             {
                                 risposta.Status = ApiResultStatus.FailedServiceCall;
-                                risposta.Message = "Impossibile effettuare la chiamata API-ANPR";
+                                risposta.Message = "Impossibile effettuare la chiamata API-ANPR si prega di riprovare più tardi;";
                                 using (LogContext.PushProperty("OperationGuid", operationGuid)) _logger.LogError("{Message}", risposta.Message);
                             }
 
@@ -432,10 +445,11 @@ namespace ScERPA.Services
                     {
 
                         risposta.Status = ApiResultStatus.FailedApiManagerToken;
-                        risposta.Message = "Impossibile ottenere il token di autorizzazione alla chiamata API-ANPR";
+                        risposta.Message = "Impossibile ottenere il token di autorizzazione alla chiamata API-ANPR si prega di riprovare più tardi;";
                         using (LogContext.PushProperty("OperationGuid", operationGuid)) _logger.LogError("{Message}", risposta.Message);
                     }
-                } else
+                }
+                else
                 {
                     risposta.Status = ApiResultStatus.FailedPurpouseConfig;
                     risposta.Message = "Configurazione della finalità errata o mancante";
@@ -457,6 +471,21 @@ namespace ScERPA.Services
             await _repository.SaveChangesAsync();
             return risposta;
 
+        }
+
+        private string LeggiErrori(TipoErroriAnomalia[]? lista)
+        {
+            string[] warnings;
+            if (lista != null)
+            {
+                warnings = lista.Where(w => w.tipoErroreAnomalia == "E").Select(w => w.testoErroreAnomalia).ToArray();
+                if (warnings is not null && warnings.Length > 0)
+                {
+                    return string.Join(";", warnings);
+                }
+            }
+            ;
+            return String.Empty;
         }
 
         public async Task<ApiResult<RispostaE002OK>> APIServizioAccertamentoIdentificativoUnicoNazionaleAsync(string user, string IdInterrogazioneRer, string codiceFiscale, DateOnly DataRiferimentoVerifica, string codiceStato, string descrizioneStato, string userID, string userLocation, string LoA, string purpouseID, string? operationGuid)
